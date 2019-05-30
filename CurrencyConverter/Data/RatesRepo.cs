@@ -7,14 +7,12 @@ namespace ConsoleApp10
 {
     public  class RatesRepo : ICurrRatesRepo
     {
-        private HttpClient client;
         private readonly string apiURL = "https://api.exchangeratesapi.io/latest?base=USD";
         private readonly Uri uri;
         Models.RatesModel model;
 
         public RatesRepo()
         {
-            client = new HttpClient();
             uri = new Uri(string.Format(apiURL, string.Empty));
             GetRatesFromApi();
         }
@@ -23,15 +21,19 @@ namespace ConsoleApp10
         {
             try
             {
-                var response = await client.GetAsync(uri);
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    model = JsonConvert.DeserializeObject<Models.RatesModel>(content);
-                } else
-                {
-                    throw new Exception("Call to api didn't work");
-                }
+                    var response = await client.GetAsync(uri);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        model = JsonConvert.DeserializeObject<Models.RatesModel>(content);
+                    }
+                    else
+                    {
+                        throw new Exception("Call to api didn't work");
+                    }
+                }                
             } catch (Exception ex)
             {
                 Console.WriteLine(ex);

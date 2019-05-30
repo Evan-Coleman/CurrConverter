@@ -30,9 +30,10 @@ namespace ConsoleApp10
                 }
                 else
                 {
-                    amount = Convert.ToDecimal(line.Split(" ")[0]);
-                    fromCurr = line.Split(" ")[1];
-                    toCurr = line.Split(" ")[2];
+                    var splitLine = line.Split(" ");
+                    amount = Convert.ToDecimal(splitLine[0]);
+                    fromCurr = splitLine[1];
+                    toCurr = splitLine[2];
                     decimal convertedAmount;
                     try
                     {
